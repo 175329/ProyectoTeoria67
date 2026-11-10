@@ -1,0 +1,422 @@
+/* =====================================================
+   PROYECTO: VALIDADOR DE INFORMACIÓN Y DOCUMENTOS
+
+   PALETA SYNTHWAVE
+
+   #0F1020 -> Fondo principal
+   #16182D -> Tarjetas
+   #FF00FF -> Rosa neón
+   #00FFFF -> Cian neón
+   #AEB7FF -> Texto secundario
+   #252949 -> Campos de entrada
+===================================================== */
+
+
+/* =====================================================
+   CONFIGURACIÓN GENERAL DEL SITIO
+===================================================== */
+
+body{
+
+    margin:0;
+
+    font-family:Arial, Helvetica, sans-serif;
+
+    background:#0F1020;
+
+    color:white;
+
+    min-height:100vh;
+
+    text-align:center;
+}
+
+
+/* =====================================================
+   ENCABEZADO
+===================================================== */
+
+header{
+
+    background:#16182D;
+
+    padding:30px;
+
+    box-shadow:0 0 20px #FF00FF;
+}
+
+/* Título principal */
+
+header h1{
+
+    margin:0;
+
+    color:#FF00FF;
+
+    text-shadow:0 0 10px #FF00FF;
+}
+
+/* Subtítulo */
+
+header p{
+
+    color:#AEB7FF;
+
+    margin-top:10px;
+}
+
+
+/* =====================================================
+   CONTENEDOR PRINCIPAL
+
+   Centra las tarjetas
+===================================================== */
+
+.contenedor{
+
+    display:flex;
+
+    justify-content:center;
+
+    align-items:center;
+
+    padding:40px 20px;
+}
+
+
+/* =====================================================
+   TARJETAS
+===================================================== */
+
+.card{
+
+    background:#16182D;
+
+    border-radius:20px;
+
+    padding:30px;
+
+    width:90%;
+
+    max-width:800px;
+
+    box-shadow:0 0 25px #00FFFF;
+}
+
+
+/* =====================================================
+   TÍTULOS INTERIORES
+===================================================== */
+
+h2{
+
+    color:#00FFFF;
+
+    text-shadow:0 0 8px #00FFFF;
+}
+
+/* Subtítulos secundarios */
+
+h3{
+
+    color:#FF00FF;
+}
+
+
+/* =====================================================
+   PÁRRAFOS
+===================================================== */
+
+p{
+
+    line-height:1.6;
+
+    color:white;
+}
+
+
+/* =====================================================
+   FORMULARIOS
+===================================================== */
+
+form{
+
+    display:flex;
+
+    flex-direction:column;
+
+    text-align:left;
+}
+
+
+/* Etiquetas */
+
+label{
+
+    margin-top:15px;
+
+    margin-bottom:5px;
+
+    color:#AEB7FF;
+
+    font-weight:bold;
+}
+
+
+/* =====================================================
+   CAMPOS DE ENTRADA
+===================================================== */
+
+input{
+
+    background:#252949;
+
+    border:2px solid #00FFFF;
+
+    color:white;
+
+    padding:12px;
+
+    border-radius:10px;
+
+    font-size:15px;
+
+    transition:0.3s;
+}
+
+
+/* Cuando el usuario selecciona el campo */
+
+input:focus{
+
+    outline:none;
+
+    box-shadow:0 0 15px #00FFFF;
+}
+
+
+/* Texto placeholder */
+
+input::placeholder{
+
+    color:#AEB7FF;
+}
+
+
+/* =====================================================
+   CONTENEDOR DE BOTONES
+===================================================== */
+
+.botones{
+
+    margin-top:30px;
+
+    display:flex;
+
+    justify-content:center;
+
+    gap:15px;
+
+    flex-wrap:wrap;
+}
+
+
+/* =====================================================
+   BOTONES Y ENLACES
+===================================================== */
+
+.btn,
+button{
+
+    background:#FF00FF;
+
+    color:white;
+
+    border:none;
+
+    border-radius:10px;
+
+    padding:12px 22px;
+
+    cursor:pointer;
+
+    font-size:16px;
+
+    text-decoration:none;
+
+    transition:0.3s;
+}
+
+
+/* Hover */
+
+.btn:hover,
+button:hover{
+
+    background:#00FFFF;
+
+    color:black;
+
+    box-shadow:0 0 20px #00FFFF;
+}
+
+
+/* =====================================================
+   ÁREA PARA CARGA DE ARCHIVOS
+===================================================== */
+
+.zona-archivo{
+
+    border:3px dashed #FF00FF;
+
+    padding:30px;
+
+    margin:20px 0;
+
+    border-radius:15px;
+
+    transition:0.3s;
+}
+
+/* Efecto visual */
+
+.zona-archivo:hover{
+
+    box-shadow:0 0 20px #FF00FF;
+}
+
+
+/* =====================================================
+   INFORMACIÓN DE ARCHIVOS
+===================================================== */
+
+.info-archivo{
+
+    text-align:left;
+
+    margin-top:20px;
+
+    padding:15px;
+
+    background:#252949;
+
+    border-radius:10px;
+}
+
+
+/* =====================================================
+   CONTENEDOR DE IMAGEN
+
+   Se usará en login.html
+===================================================== */
+
+.contenedor-imagen{
+
+    height:250px;
+
+    margin:20px 0;
+
+    display:flex;
+
+    justify-content:center;
+
+    align-items:center;
+
+    border:2px dashed #00FFFF;
+
+    border-radius:15px;
+
+    color:#AEB7FF;
+
+    background:#252949;
+}
+
+
+/* =====================================================
+   CLASES PARA FUTURAS VALIDACIONES
+
+   Se usarán cuando agreguen JavaScript
+===================================================== */
+
+/* Campo correcto */
+
+.correcto{
+
+    border:2px solid #00FF66;
+}
+
+/* Campo incorrecto */
+
+.incorrecto{
+
+    border:2px solid red;
+}
+
+/* Mensaje de error */
+
+.error{
+
+    color:red;
+
+    font-size:14px;
+
+    margin-top:5px;
+}
+
+/* Mensaje de éxito */
+
+.exito{
+
+    color:#00FF66;
+
+    font-size:14px;
+
+    margin-top:5px;
+}
+
+
+/* =====================================================
+   PIE DE PÁGINA
+===================================================== */
+
+footer{
+
+    margin-top:20px;
+
+    padding:20px;
+
+    color:#AEB7FF;
+}
+
+
+/* =====================================================
+   RESPONSIVE
+
+   Adaptación para celulares y tabletas
+===================================================== */
+
+@media (max-width:768px){
+
+    .card{
+
+        width:95%;
+
+        padding:20px;
+    }
+
+    .botones{
+
+        flex-direction:column;
+    }
+
+    .btn,
+    button{
+
+        width:100%;
+    }
+
+    header h1{
+
+        font-size:1.8rem;
+    }
+}
