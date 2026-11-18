@@ -1,26 +1,88 @@
-<!DOCTYPE html> 
-<html lang="es"> 
-<link rel="stylesheet" href="estilos.css"> 
+<!DOCTYPE html>
+<html lang="es">
 <head>
-    <meta charset="UTF-8"> 
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-</head> 
-<body> 
-<header><h1>Registro de Usuario</h1></header> 
-<form> 
-<label>Nombre Completo</label><input type="text"> 
-<label>Número Telefónico</label><input type="text"> 
-<label>CURP</label><input type="text">
-<label>Matrícula</label><input type="text"> 
-<label>Código Postal</label><input type="text"> 
-<label>Contraseña</label><input type="password"> 
-<label>Dirección IP</label><input type="text"> 
-<label>URL</label><input type="text"> 
-<div class="botones"> 
-<a href="index.html" class="btn">Volver Atrás</a> 
-<button type="submit">Confirmar Datos</button> 
-<a href="archivos.html" class="btn">Usar Datos de Archivo</a> 
-</div> 
-</form> 
-</body> 
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Registro de Usuario | UPSLP</title>
+    <link rel="stylesheet" href="estilos.css">
+</head>
+<body>
+    <header>
+        <h1>Registro de Usuario</h1>
+        <p>Validación de campos mediante Expresiones Regulares</p>
+    </header>
+
+    <main class="contenedor">
+        <section class="card">
+            <h2>Captura de Datos</h2>
+            <p class="descripcion-card">Complete los siguientes campos respetando el formato oficial requerido.</p>
+            
+            <form>
+                <div class="grid-formulario">
+                    <div class="campo">
+                        <label for="nombre">Nombre Completo</label>
+                        <input type="text" id="nombre" placeholder="Ej. Juan Pérez López">
+                    </div>
+                    <div class="campo">
+                        <label for="telefono">Número Telefónico</label>
+                        <input type="text" id="telefono" placeholder="Ej. 4441234567">
+                    </div>
+                    <div class="campo">
+                        <label for="curp">CURP</label>
+                        <input type="text" id="curp" placeholder="18 caracteres alfanuméricos">
+                    </div>
+                    <div class="campo">
+                        <label for="matricula">Matrícula</label>
+                        <input type="text" id="matricula" placeholder="Ej. 175329">
+                    </div>
+                    <div class="campo">
+                        <label for="cp">Código Postal</label>
+                        <input type="text" id="cp" placeholder="Ej. 78363">
+                    </div>
+                    <div class="campo">
+                        <label for="password">Contraseña</label>
+                        <input type="password" id="password" placeholder="Ingrese una contraseña segura">
+                    </div>
+                    <div class="campo">
+                        <label for="ip">Dirección IP</label>
+                        <input type="text" id="ip" placeholder="Ej. 192.168.1.1">
+                    </div>
+                    <div class="campo">
+                        <label for="url">URL</label>
+                        <input type="text" id="url" placeholder="Ej. https://www.upslp.edu.mx">
+                    </div>
+                </div>
+
+                <div class="botones">
+                    <a href="index.html" class="btn btn-secundario">Volver al Inicio</a>
+                    <a href="archivos.html" class="btn">Usar Datos de Archivo</a>
+                    <button type="submit">Confirmar Datos</button>
+                </div>
+            </form>
+        </section>
+    </main>
+
+    <footer>
+        <div class="footer-contenido">
+            <div class="footer-materia">
+                <h3>Teoría Computacional</h3>
+                <p>Universidad Politécnica de San Luis Potosí (UPSLP) — Proyecto Final</p>
+            </div>
+            <div class="equipo-grid">
+                <div class="integrante">
+                    <span class="nombre">Casanova De La Madrid Juan Pablo</span>
+                    <span class="matricula">Matrícula: 175329</span>
+                </div>
+                <div class="integrante">
+                    <span class="nombre">Gallegos Marín Antonio de Jesús</span>
+                    <span class="matricula">Matrícula: 177557</span>
+                </div>
+                <div class="integrante">
+                    <span class="nombre">Hernández Mondragón Francisco Javier</span>
+                    <span class="matricula">Matrícula: 178084</span>
+                </div>
+            </div>
+        </div>
+    </footer>
+</body>
 </html>
