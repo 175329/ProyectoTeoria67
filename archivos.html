@@ -1,20 +1,56 @@
-<!DOCTYPE html> 
-<html lang="es"> 
-<link rel="stylesheet" href="estilos.css"> 
+<!DOCTYPE html>
+<html lang="es">
 <head>
-    <meta charset="UTF-8"> 
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-</head> 
-<body> 
-<h1>Importación de Archivos</h1> 
-<div class="zona-archivo"> 
-<p>Arrastre el archivo aquí</p> 
-<input type="file"> 
-</div> 
-<div class="botones"> 
-    <a href="index.html" class="btn">Volver al Inicio</a> 
-    <a href="registro.html" class="btn">Volver Atrás</a> 
-<button>Procesar Archivo</button> 
-</div> 
-</body> 
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Importación de Archivos | UPSLP</title>
+    <link rel="stylesheet" href="estilos.css">
+</head>
+<body>
+    <header>
+        <h1>Importación de Archivos</h1>
+        <p>Carga de documentos para validación automática de patrones</p>
+    </header>
+
+    <main class="contenedor">
+        <section class="card card-angosta">
+            <h2>Cargar Documento</h2>
+            <p class="descripcion-card">Seleccione o arrastre un archivo de texto para analizar su contenido.</p>
+
+            <div class="zona-archivo">
+                <p>Arrastre el archivo aquí o selecciónelo desde su equipo</p>
+                <input type="file">
+            </div>
+
+            <div class="botones">
+                <a href="index.html" class="btn btn-secundario">Volver al Inicio</a>
+                <a href="registro.html" class="btn btn-secundario">Volver Atrás</a>
+                <button type="button" class="btn-primario">Procesar Archivo</button>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <div class="footer-contenido">
+            <div class="footer-materia">
+                <h3>Teoría Computacional</h3>
+                <p>Universidad Politécnica de San Luis Potosí (UPSLP) — Proyecto Final</p>
+            </div>
+            <div class="equipo-grid">
+                <div class="integrante">
+                    <span class="nombre">Casanova De La Madrid Juan Pablo</span>
+                    <span class="matricula">Matrícula: 175329</span>
+                </div>
+                <div class="integrante">
+                    <span class="nombre">Gallegos Marín Antonio de Jesús</span>
+                    <span class="matricula">Matrícula: 177557</span>
+                </div>
+                <div class="integrante">
+                    <span class="nombre">Hernández Mondragón Francisco Javier</span>
+                    <span class="matricula">Matrícula: 178084</span>
+                </div>
+            </div>
+        </div>
+    </footer>
+</body>
 </html>
