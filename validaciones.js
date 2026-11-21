@@ -7,23 +7,19 @@ document.addEventListener("DOMContentLoaded", () => {
     const form = document.getElementById("form-registro");
     const inputs = {
         nombre: document.getElementById("nombre"),
-        correo: document.getElementById("correo"),
         matricula: document.getElementById("matricula"),
+        correo: document.getElementById("correo"),
         curp: document.getElementById("curp"),
         telefono: document.getElementById("telefono"),
         cp: document.getElementById("cp"),
-        password: document.getElementById("password")
+        password: document.getElementById("password"),
+        ip: document.getElementById("ip"),
+        url: document.getElementById("url")
     };
+
+    const btnAutodetectar = document.getElementById("btn-autodetectar");
+    const estadoDeteccion = document.getElementById("estado-deteccion");
     const resumenBox = document.getElementById("resumen-validacion");
-
-    // Estado interno de IP y URL
-    let estadoSistema = {
-        ipValida: true,
-        urlValida: true
-    };
-
-    // Iniciar verificación automática de IP y URL
-    verificarConexionYUrl();
 
     /* =================================================
        FUNCIONES DE VALIDACIÓN POR CAMPO (AFD / REGEX)
@@ -35,7 +31,6 @@ document.addEventListener("DOMContentLoaded", () => {
         if (!texto) {
             return { valido: false, error: "El nombre es obligatorio." };
         }
-        // Revisar caracteres prohibidos (números o símbolos)
         const charInvalido = texto.match(/[^A-Za-zÁÉÍÓÚÜÑáéíóúüñ\s]/);
         if (charInvalido) {
             return {
@@ -43,7 +38,6 @@ document.addEventListener("DOMContentLoaded", () => {
                 error: `Se detectó el carácter no permitido '${charInvalido[0]}'. Solo se permiten letras y espacios.`
             };
         }
-        // Detectar espacios dobles
         if (/\s{2,}/.test(texto)) {
             return { valido: false, error: "No coloque espacios dobles entre palabras." };
         }
@@ -61,7 +55,7 @@ document.addEventListener("DOMContentLoaded", () => {
             if (!/^[A-ZÁÉÍÓÚÜÑ][a-záéíóúüñ]+$/.test(p)) {
                 return {
                     valido: false,
-                    error: `La palabra '${p}' es inválida: debe iniciar con mayúscula y continuar en minúsculas.`
+                    error: `La palabra '${p}' debe iniciar con mayúscula y continuar en minúsculas.`
                 };
             }
         }
@@ -69,7 +63,44 @@ document.addEventListener("DOMContentLoaded", () => {
         return { valido: true, mensaje: "Nombre válido (estado de aceptación qF)." };
     }
 
-    // 2. CORREO INSTITUCIONAL (1[789]NNNN@upslp.edu.mx)
+    // 2. MATRÍCULA (1[789]NNNN)
+    function validarMatricula(valor, correo) {
+        const texto = valor.trim();
+        if (!texto) {
+            return { valido: false, error: "La matrícula es obligatoria." };
+        }
+        if (/[^0-9]/.test(texto)) {
+            return { valido: false, error: "Solo se permiten dígitos numéricos (enviado a qD)." };
+        }
+        if (!/^1/.test(texto)) {
+            return {
+                valido: false,
+                error: `Posición 1 (q0 → q1): debe iniciar con '1'; se encontró '${texto[0]}'.`
+            };
+        }
+        if (texto.length >= 2 && !/^1[789]/.test(texto)) {
+            return {
+                valido: false,
+                error: `Posición 2 (q1 → q2): se esperaba 7, 8 o 9; se encontró '${texto[1]}'.`
+            };
+        }
+        if (texto.length !== 6) {
+            return {
+                valido: false,
+                error: `Debe contener exactamente 6 dígitos (actualmente tiene ${texto.length}).`
+            };
+        }
+        if (correo.trim() && !correo.trim().startsWith(texto + "@")) {
+            return {
+                valido: false,
+                error: "Inconsistencia: la matrícula no coincide con el correo ingresado."
+            };
+        }
+
+        return { valido: true, mensaje: "Matrícula válida y sincronizada (qF)." };
+    }
+
+    // 3. CORREO INSTITUCIONAL (1[789]NNNN@upslp.edu.mx)
     function validarCorreo(valor) {
         const texto = valor.trim();
         if (!texto) {
@@ -97,29 +128,6 @@ document.addEventListener("DOMContentLoaded", () => {
         return { valido: true, mensaje: "Correo institucional válido (qF)." };
     }
 
-    // 3. MATRÍCULA (Automática, readonly y consistente con el correo)
-    function validarMatricula(valor, correo) {
-        if (!valor) {
-            return {
-                valido: false,
-                error: "Se llena automáticamente al escribir un correo institucional válido."
-            };
-        }
-        if (!/^1[789]\d{4}$/.test(valor)) {
-            return {
-                valido: false,
-                error: "Matrícula inválida: debe tener 6 dígitos e iniciar con 17, 18 o 19."
-            };
-        }
-        if (!correo.trim().startsWith(valor)) {
-            return {
-                valido: false,
-                error: "Inconsistencia: la matrícula no coincide con los primeros 6 dígitos del correo."
-            };
-        }
-        return { valido: true, mensaje: "Matrícula sincronizada correctamente (qF)." };
-    }
-
     // 4. CURP (Simulación AFD posición por posición: q0 -> qF / qD)
     function validarCURP(valor) {
         const texto = valor.trim();
@@ -127,26 +135,25 @@ document.addEventListener("DOMContentLoaded", () => {
             return { valido: false, error: "La CURP es obligatoria." };
         }
 
-        // Reglas del AFD por posición (0 a 17)
         const reglasAFD = [
-            { regex: /^[A-Z]$/, desc: "una letra mayúscula (A-Z)" }, // 1: q0->q1
-            { regex: /^[A-Z]$/, desc: "una letra mayúscula (A-Z)" }, // 2: q1->q2
-            { regex: /^[A-Z]$/, desc: "una letra mayúscula (A-Z)" }, // 3: q2->q3
-            { regex: /^[A-Z]$/, desc: "una letra mayúscula (A-Z)" }, // 4: q3->q4
-            { regex: /^[0-9]$/, desc: "un número (0-9)" },           // 5: q4->q5
-            { regex: /^[0-9]$/, desc: "un número (0-9)" },           // 6: q5->q6
-            { regex: /^[0-9]$/, desc: "un número (0-9)" },           // 7: q6->q7
-            { regex: /^[0-9]$/, desc: "un número (0-9)" },           // 8: q7->q8
-            { regex: /^[0-9]$/, desc: "un número (0-9)" },           // 9: q8->q9
-            { regex: /^[0-9]$/, desc: "un número (0-9)" },           // 10: q9->q10
-            { regex: /^[HM]$/,  desc: "sexo 'H' o 'M'" },            // 11: q10->q11
-            { regex: /^[A-Z]$/, desc: "una letra mayúscula (A-Z)" }, // 12: q11->q12
-            { regex: /^[A-Z]$/, desc: "una letra mayúscula (A-Z)" }, // 13: q12->q13
-            { regex: /^[A-Z]$/, desc: "una letra mayúscula (A-Z)" }, // 14: q13->q14
-            { regex: /^[A-Z]$/, desc: "una letra mayúscula (A-Z)" }, // 15: q14->q15
-            { regex: /^[A-Z]$/, desc: "una letra mayúscula (A-Z)" }, // 16: q15->q16
-            { regex: /^[0-9]$/, desc: "un número (0-9)" },           // 17: q16->q17
-            { regex: /^[0-9]$/, desc: "un número (0-9)" }            // 18: q17->qF
+            { regex: /^[A-Z]$/, desc: "una letra mayúscula (A-Z)" },
+            { regex: /^[A-Z]$/, desc: "una letra mayúscula (A-Z)" },
+            { regex: /^[A-Z]$/, desc: "una letra mayúscula (A-Z)" },
+            { regex: /^[A-Z]$/, desc: "una letra mayúscula (A-Z)" },
+            { regex: /^[0-9]$/, desc: "un número (0-9)" },
+            { regex: /^[0-9]$/, desc: "un número (0-9)" },
+            { regex: /^[0-9]$/, desc: "un número (0-9)" },
+            { regex: /^[0-9]$/, desc: "un número (0-9)" },
+            { regex: /^[0-9]$/, desc: "un número (0-9)" },
+            { regex: /^[0-9]$/, desc: "un número (0-9)" },
+            { regex: /^[HM]$/,  desc: "sexo 'H' o 'M'" },
+            { regex: /^[A-Z]$/, desc: "una letra mayúscula (A-Z)" },
+            { regex: /^[A-Z]$/, desc: "una letra mayúscula (A-Z)" },
+            { regex: /^[A-Z]$/, desc: "una letra mayúscula (A-Z)" },
+            { regex: /^[A-Z]$/, desc: "una letra mayúscula (A-Z)" },
+            { regex: /^[A-Z]$/, desc: "una letra mayúscula (A-Z)" },
+            { regex: /^[0-9]$/, desc: "un número (0-9)" },
+            { regex: /^[0-9]$/, desc: "un número (0-9)" }
         ];
 
         const limite = Math.min(texto.length, 18);
@@ -156,7 +163,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 const siguienteEstado = i === 17 ? "qF" : `q${i + 1}`;
                 return {
                     valido: false,
-                    error: `Posición ${i + 1}: se esperaba ${reglasAFD[i].desc} y se encontró '${char}'. Transición esperada: q${i} → ${siguienteEstado} (enviado a qD).`
+                    error: `Posición ${i + 1}: se esperaba ${reglasAFD[i].desc} y se encontró '${char}'. Transición: q${i} → ${siguienteEstado} (enviado a qD).`
                 };
             }
         }
@@ -177,7 +184,7 @@ document.addEventListener("DOMContentLoaded", () => {
         return { valido: true, mensaje: "CURP válida (18/18 posiciones verificadas, qF)." };
     }
 
-    // 5. TELÉFONO (Exactamente 10 dígitos sin símbolos ni espacios)
+    // 5. TELÉFONO (Exactamente 10 dígitos)
     function validarTelefono(valor) {
         if (!valor) {
             return { valido: false, error: "El número telefónico es obligatorio." };
@@ -186,7 +193,7 @@ document.addEventListener("DOMContentLoaded", () => {
             if (!/[0-9]/.test(valor[i])) {
                 return {
                     valido: false,
-                    error: `Se detectó el carácter no permitido '${valor[i]}' en la posición ${i + 1}. Solo se permiten números.`
+                    error: `Se detectó '${valor[i]}' en la posición ${i + 1}. Solo se permiten números.`
                 };
             }
         }
@@ -199,7 +206,7 @@ document.addEventListener("DOMContentLoaded", () => {
         return { valido: true, mensaje: "Teléfono válido (10 dígitos, qF)." };
     }
 
-    // 6. CÓDIGO POSTAL (Exactamente 5 dígitos - formato mexicano)
+    // 6. CÓDIGO POSTAL (Exactamente 5 dígitos)
     function validarCP(valor) {
         if (!valor) {
             return { valido: false, error: "El código postal es obligatorio." };
@@ -245,7 +252,7 @@ document.addEventListener("DOMContentLoaded", () => {
             if (!caracterValido.test(valor[i])) {
                 return {
                     valido: false,
-                    error: `Posición ${i + 1}: el carácter '${valor[i]}' no está permitido por el autómata.`
+                    error: `Posición ${i + 1}: el carácter '${valor[i]}' no está permitido.`
                 };
             }
         }
@@ -259,51 +266,87 @@ document.addEventListener("DOMContentLoaded", () => {
         return { valido: true, mensaje: "Contraseña válida (qF)." };
     }
 
-    /* =================================================
-       VERIFICACIÓN AUTOMÁTICA DE IP (IPv4) Y URL
-    ================================================= */
-
-    async function verificarConexionYUrl() {
-        const badgeIP = document.getElementById("estado-ip");
-        const badgeURL = document.getElementById("estado-url");
-
-        // 1. Validar URL actual
-        const urlActual = window.location.href;
-        const regexURL = /^https?:\/\/[a-zA-Z0-9-]+(\.[a-zA-Z0-9-]+)+(\/[^\s]*)?$/;
-
-        if (regexURL.test(urlActual)) {
-            estadoSistema.urlValida = true;
-            badgeURL.className = "badge-estado badge-ok";
-            badgeURL.textContent = `URL válida: ${urlActual}`;
-        } else if (urlActual.startsWith("file://") || urlActual.includes("localhost") || urlActual.includes("127.0.0.1")) {
-            estadoSistema.urlValida = true;
-            badgeURL.className = "badge-estado badge-aviso";
-            badgeURL.textContent = `Modo prueba local detectado (${urlActual.split("/").pop()})`;
-        } else {
-            estadoSistema.urlValida = false;
-            badgeURL.className = "badge-estado badge-error";
-            badgeURL.textContent = "La URL no cumple con el formato http(s):// válido.";
+    // 8. DIRECCIÓN IP (IPv4: 4 bloques de 0 a 255 separados por punto)
+    function validarIP(valor) {
+        const texto = valor.trim();
+        if (!texto) {
+            return { valido: false, error: "La dirección IP es obligatoria." };
+        }
+        if (/[^0-9.]/.test(texto)) {
+            return {
+                valido: false,
+                error: "Solo se permiten números (0-9) y puntos '.' en formato IPv4."
+            };
         }
 
-        // 2. Detectar y validar IP pública (IPv4)
-        const regexIPv4 = /^((25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)\.){3}(25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)$/;
-        try {
-            const resp = await fetch("https://api.ipify.org?format=json");
-            const data = await resp.json();
-            if (regexIPv4.test(data.ip)) {
-                estadoSistema.ipValida = true;
-                badgeIP.className = "badge-estado badge-ok";
-                badgeIP.textContent = `IP pública válida (IPv4): ${data.ip}`;
-            } else {
-                estadoSistema.ipValida = false;
-                badgeIP.className = "badge-estado badge-error";
-                badgeIP.textContent = `La IP detectada (${data.ip}) no cumple formato IPv4.`;
+        const bloques = texto.split(".");
+        if (bloques.length !== 4) {
+            return {
+                valido: false,
+                error: `Formato IPv4 incompleto: debe tener 4 bloques separados por punto (tiene ${bloques.length}).`
+            };
+        }
+
+        for (let i = 0; i < 4; i++) {
+            const bloque = bloques[i];
+            if (bloque === "") {
+                return {
+                    valido: false,
+                    error: `El bloque ${i + 1} está vacío. Revise los puntos consecutivos o al final.`
+                };
             }
-        } catch (err) {
-            estadoSistema.ipValida = true; // No bloquea si presentan sin internet
-            badgeIP.className = "badge-estado badge-aviso";
-            badgeIP.textContent = "Sin conexión externa para consultar IP pública (modo local).";
+            if (bloque.length > 1 && bloque.startsWith("0")) {
+                return {
+                    valido: false,
+                    error: `El bloque ${i + 1} ('${bloque}') no debe llevar ceros a la izquierda.`
+                };
+            }
+            const num = Number(bloque);
+            if (num < 0 || num > 255) {
+                return {
+                    valido: false,
+                    error: `El bloque ${i + 1} ('${bloque}') está fuera de rango (debe estar entre 0 y 255).`
+                };
+            }
         }
+
+        return { valido: true, mensaje: "Dirección IPv4 válida (qF)." };
+    }
+
+    // 9. URL (http:// o https://, dominio + extensión, ruta opcional, sin puerto ni acentos/ñ)
+    function validarURL(valor) {
+        const texto = valor.trim();
+        if (!texto) {
+            return { valido: false, error: "La dirección URL es obligatoria." };
+        }
+        if (/\s/.test(texto)) {
+            return { valido: false, error: "La URL no debe contener espacios." };
+        }
+        if (/[ñÑáéíóúÁÉÍÓÚüÜ]/.test(texto)) {
+            return { valido: false, error: "No se permiten acentos ni la letra ñ en la URL." };
+        }
+        if (!/^https?:\/\//.test(texto)) {
+            return {
+                valido: false,
+                error: "Debe iniciar con el protocolo 'http://' o 'https://'."
+            };
+        }
+        if (/^https?:\/\/[^\/]+:\d+/.test(texto)) {
+            return {
+                valido: false,
+                error: "No se aceptan URLs con número de puerto explícito."
+            };
+        }
+
+        const regexURL = /^https?:\/\/([a-zA-Z0-9]([a-zA-Z0-9-]*[a-zA-Z0-9])?\.)+[a-zA-Z]{2,}(\/[a-zA-Z0-9\-._~\/?&#=%+]*)?$/;
+        if (!regexURL.test(texto)) {
+            return {
+                valido: false,
+                error: "Estructura inválida. Ejemplo esperado: https://www.upslp.edu.mx"
+            };
+        }
+
+        return { valido: true, mensaje: "URL válida (qF)." };
     }
 
     /* =================================================
@@ -327,25 +370,36 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     /* =================================================
-       EVENTOS EN TIEMPO REAL
+       EVENTOS EN TIEMPO REAL Y SINCRONIZACIÓN BIDIRECCIONAL
     ================================================= */
 
     inputs.nombre.addEventListener("input", () => {
         aplicarEstadoVisual(inputs.nombre, "msg-nombre", validarNombre(inputs.nombre.value));
     });
 
-    // Al escribir el correo, extrae los primeros 6 dígitos y los copia a Matrícula
-    inputs.correo.addEventListener("input", () => {
-        const valorCorreo = inputs.correo.value.trim();
-        const coincidenciaDigitos = valorCorreo.match(/^\d{1,6}/);
-        inputs.matricula.value = coincidenciaDigitos ? coincidenciaDigitos[0] : "";
+    // Si escribe la MATRÍCULA -> genera el CORREO automáticamente
+    inputs.matricula.addEventListener("input", () => {
+        const mat = inputs.matricula.value.trim();
+        inputs.correo.value = mat.length > 0 ? `${mat}@upslp.edu.mx` : "";
 
-        aplicarEstadoVisual(inputs.correo, "msg-correo", validarCorreo(valorCorreo));
-        aplicarEstadoVisual(
-            inputs.matricula,
-            "msg-matricula",
-            validarMatricula(inputs.matricula.value, valorCorreo)
-        );
+        aplicarEstadoVisual(inputs.matricula, "msg-matricula", validarMatricula(mat, inputs.correo.value));
+        aplicarEstadoVisual(inputs.correo, "msg-correo", validarCorreo(inputs.correo.value));
+    });
+
+    // Si escribe el CORREO -> extrae hasta 6 dígitos iniciales y completa MATRÍCULA
+    inputs.correo.addEventListener("input", () => {
+        const correo = inputs.correo.value.trim();
+        const parteUsuario = correo.split("@")[0];
+        const digitos = parteUsuario.match(/^\d{1,6}/);
+
+        if (digitos) {
+            inputs.matricula.value = digitos[0];
+        } else if (correo === "") {
+            inputs.matricula.value = "";
+        }
+
+        aplicarEstadoVisual(inputs.correo, "msg-correo", validarCorreo(correo));
+        aplicarEstadoVisual(inputs.matricula, "msg-matricula", validarMatricula(inputs.matricula.value, correo));
     });
 
     inputs.curp.addEventListener("input", () => {
@@ -364,6 +418,50 @@ document.addEventListener("DOMContentLoaded", () => {
         aplicarEstadoVisual(inputs.password, "msg-password", validarPassword(inputs.password.value));
     });
 
+    inputs.ip.addEventListener("input", () => {
+        aplicarEstadoVisual(inputs.ip, "msg-ip", validarIP(inputs.ip.value));
+    });
+
+    inputs.url.addEventListener("input", () => {
+        aplicarEstadoVisual(inputs.url, "msg-url", validarURL(inputs.url.value));
+    });
+
+    /* =================================================
+       BOTÓN DE AUTODETECCIÓN (IP PÚBLICA Y URL ACTUAL)
+    ================================================= */
+
+    btnAutodetectar.addEventListener("click", async () => {
+        btnAutodetectar.disabled = true;
+        btnAutodetectar.textContent = "Detectando...";
+        estadoDeteccion.textContent = "Consultando dirección IP pública y URL actual...";
+
+        // 1. Evaluar URL actual
+        const urlActual = window.location.href;
+        if (/^https?:\/\//.test(urlActual) && !urlActual.includes("localhost") && !urlActual.includes("127.0.0.1")) {
+            inputs.url.value = urlActual;
+            aplicarEstadoVisual(inputs.url, "msg-url", validarURL(inputs.url.value));
+        } else {
+            inputs.url.value = "https://www.upslp.edu.mx";
+            aplicarEstadoVisual(inputs.url, "msg-url", validarURL(inputs.url.value));
+        }
+
+        // 2. Consultar IP pública (IPv4)
+        try {
+            const resp = await fetch("https://api.ipify.org?format=json");
+            const data = await resp.json();
+            inputs.ip.value = data.ip;
+            aplicarEstadoVisual(inputs.ip, "msg-ip", validarIP(inputs.ip.value));
+            estadoDeteccion.textContent = "Datos cargados. Puedes editarlos manualmente para probar casos inválidos.";
+        } catch (err) {
+            inputs.ip.value = "192.168.1.1";
+            aplicarEstadoVisual(inputs.ip, "msg-ip", validarIP(inputs.ip.value));
+            estadoDeteccion.textContent = "Sin conexión externa: se cargó una IP de ejemplo editable (192.168.1.1).";
+        } finally {
+            btnAutodetectar.disabled = false;
+            btnAutodetectar.textContent = "Autodetectar IP y URL";
+        }
+    });
+
     /* =================================================
        VALIDACIÓN FINAL AL PULSAR "CONFIRMAR DATOS"
     ================================================= */
@@ -373,12 +471,14 @@ document.addEventListener("DOMContentLoaded", () => {
 
         const evaluaciones = [
             { nombre: "Nombre Completo", input: inputs.nombre, msgId: "msg-nombre", res: validarNombre(inputs.nombre.value) },
-            { nombre: "Correo Electrónico", input: inputs.correo, msgId: "msg-correo", res: validarCorreo(inputs.correo.value) },
             { nombre: "Matrícula", input: inputs.matricula, msgId: "msg-matricula", res: validarMatricula(inputs.matricula.value, inputs.correo.value) },
+            { nombre: "Correo Institucional", input: inputs.correo, msgId: "msg-correo", res: validarCorreo(inputs.correo.value) },
             { nombre: "CURP", input: inputs.curp, msgId: "msg-curp", res: validarCURP(inputs.curp.value) },
             { nombre: "Número Telefónico", input: inputs.telefono, msgId: "msg-telefono", res: validarTelefono(inputs.telefono.value) },
             { nombre: "Código Postal", input: inputs.cp, msgId: "msg-cp", res: validarCP(inputs.cp.value) },
-            { nombre: "Contraseña", input: inputs.password, msgId: "msg-password", res: validarPassword(inputs.password.value) }
+            { nombre: "Contraseña", input: inputs.password, msgId: "msg-password", res: validarPassword(inputs.password.value) },
+            { nombre: "Dirección IP", input: inputs.ip, msgId: "msg-ip", res: validarIP(inputs.ip.value) },
+            { nombre: "Dirección URL", input: inputs.url, msgId: "msg-url", res: validarURL(inputs.url.value) }
         ];
 
         const errores = [];
@@ -389,14 +489,6 @@ document.addEventListener("DOMContentLoaded", () => {
                 errores.push(`<strong>${item.nombre}:</strong> ${item.res.error}`);
             }
         });
-
-        // Verificación final de consistencia global
-        if (!estadoSistema.ipValida) {
-            errores.push("<strong>Dirección IP:</strong> La IP detectada no cumple el formato IPv4.");
-        }
-        if (!estadoSistema.urlValida) {
-            errores.push("<strong>URL:</strong> La dirección de la página no es válida.");
-        }
 
         resumenBox.classList.remove("resumen-oculto", "resumen-errores", "resumen-exito");
 
@@ -412,7 +504,7 @@ document.addEventListener("DOMContentLoaded", () => {
             resumenBox.classList.add("resumen-exito");
             resumenBox.innerHTML = `
                 <h3>Registro completado correctamente</h3>
-                <p>Todos los campos pasaron las validaciones de los autómatas (estado de aceptación <strong>qF</strong>) y la consistencia Correo ↔ Matrícula fue verificada.</p>
+                <p>Todos los campos cumplieron las reglas de los autómatas (estado de aceptación <strong>qF</strong>) y la consistencia Matrícula ↔ Correo fue verificada.</p>
             `;
             resumenBox.scrollIntoView({ behavior: "smooth", block: "center" });
         }
