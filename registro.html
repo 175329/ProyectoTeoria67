@@ -9,49 +9,88 @@
 <body>
     <header>
         <h1>Registro de Usuario</h1>
-        <p>Validación de campos mediante Expresiones Regulares</p>
+        <p>Validación en tiempo real mediante Autómatas Finitos y Expresiones Regulares</p>
     </header>
 
     <main class="contenedor">
         <section class="card">
-            <h2>Captura de Datos</h2>
-            <p class="descripcion-card">Complete los siguientes campos respetando el formato oficial requerido.</p>
-            
-            <form>
+            <h2>Captura de Datos del Estudiante</h2>
+            <p class="descripcion-card">
+                Complete los campos respetando el formato oficial. La matrícula se completará automáticamente a partir de su correo institucional.
+            </p>
+
+            <!-- Panel automático de IP y URL (sin intervención del usuario) -->
+            <div class="panel-sistema">
+                <span class="titulo-sistema">Verificación automática de conexión:</span>
+                <div class="badges-sistema">
+                    <span id="estado-ip" class="badge-estado badge-aviso">Detectando IP pública...</span>
+                    <span id="estado-url" class="badge-estado badge-aviso">Verificando URL...</span>
+                </div>
+            </div>
+
+            <form id="form-registro" novalidate>
                 <div class="grid-formulario">
-                    <div class="campo">
+
+                    <!-- Nombre Completo -->
+                    <div class="campo campo-completo">
                         <label for="nombre">Nombre Completo</label>
-                        <input type="text" id="nombre" placeholder="Ej. Juan Pérez López">
+                        <input type="text" id="nombre" placeholder="Ej. Antonio De Jesus Gallegos">
+                        <small class="ayuda-campo">De 3 a 8 palabras, cada una iniciando con mayúscula y el resto en minúsculas (solo letras).</small>
+                        <small class="mensaje-campo" id="msg-nombre"></small>
                     </div>
+
+                    <!-- Correo Electrónico -->
+                    <div class="campo">
+                        <label for="correo">Correo Institucional</label>
+                        <input type="text" id="correo" placeholder="Ej. 177557@upslp.edu.mx">
+                        <small class="ayuda-campo">Formato: 1[7/8/9]NNNN@upslp.edu.mx</small>
+                        <small class="mensaje-campo" id="msg-correo"></small>
+                    </div>
+
+                    <!-- Matrícula (Bloqueada / Automática) -->
+                    <div class="campo">
+                        <label for="matricula">Matrícula (Automática)</label>
+                        <input type="text" id="matricula" placeholder="Se genera desde el correo" readonly>
+                        <small class="ayuda-campo">Campo bloqueado. Coincide con los 6 dígitos de tu correo.</small>
+                        <small class="mensaje-campo" id="msg-matricula"></small>
+                    </div>
+
+                    <!-- CURP -->
+                    <div class="campo">
+                        <label for="curp">CURP</label>
+                        <input type="text" id="curp" placeholder="Ej. GALA010203HSLRRL01" maxlength="20">
+                        <small class="ayuda-campo">18 caracteres en mayúsculas: 4 letras, 6 números, H/M, 5 letras, 2 números.</small>
+                        <small class="mensaje-campo" id="msg-curp"></small>
+                    </div>
+
+                    <!-- Teléfono -->
                     <div class="campo">
                         <label for="telefono">Número Telefónico</label>
                         <input type="text" id="telefono" placeholder="Ej. 4441234567">
+                        <small class="ayuda-campo">Exactamente 10 dígitos, sin espacios ni guiones.</small>
+                        <small class="mensaje-campo" id="msg-telefono"></small>
                     </div>
-                    <div class="campo">
-                        <label for="curp">CURP</label>
-                        <input type="text" id="curp" placeholder="18 caracteres alfanuméricos">
-                    </div>
-                    <div class="campo">
-                        <label for="matricula">Matrícula</label>
-                        <input type="text" id="matricula" placeholder="Ej. 175329">
-                    </div>
+
+                    <!-- Código Postal -->
                     <div class="campo">
                         <label for="cp">Código Postal</label>
-                        <input type="text" id="cp" placeholder="Ej. 78363">
+                        <input type="text" id="cp" placeholder="Ej. 78390">
+                        <small class="ayuda-campo">Exactamente 5 dígitos numéricos.</small>
+                        <small class="mensaje-campo" id="msg-cp"></small>
                     </div>
+
+                    <!-- Contraseña -->
                     <div class="campo">
                         <label for="password">Contraseña</label>
-                        <input type="password" id="password" placeholder="Ingrese una contraseña segura">
+                        <input type="password" id="password" placeholder="Ej. -A12345678">
+                        <small class="ayuda-campo">10 caracteres: [Símbolo: - / _ . | + ^][Mayúscula][8 válidos].</small>
+                        <small class="mensaje-campo" id="msg-password"></small>
                     </div>
-                    <div class="campo">
-                        <label for="ip">Dirección IP</label>
-                        <input type="text" id="ip" placeholder="Ej. 192.168.1.1">
-                    </div>
-                    <div class="campo">
-                        <label for="url">URL</label>
-                        <input type="text" id="url" placeholder="Ej. https://www.upslp.edu.mx">
-                    </div>
+
                 </div>
+
+                <!-- Contenedor para la lista detallada de errores o mensaje de éxito -->
+                <div id="resumen-validacion" class="resumen-oculto"></div>
 
                 <div class="botones">
                     <a href="index.html" class="btn btn-secundario">Volver al Inicio</a>
@@ -59,6 +98,59 @@
                     <button type="submit">Confirmar Datos</button>
                 </div>
             </form>
+
+            <!-- Guía desplegable de ejemplos para el usuario / exposición -->
+            <details class="guia-ejemplos">
+                <summary>Ver ejemplos válidos e inválidos por campo</summary>
+                <div class="tabla-ejemplos-contenedor">
+                    <table class="tabla-ejemplos">
+                        <thead>
+                            <tr>
+                                <th>Campo</th>
+                                <th>Ejemplo Válido</th>
+                                <th>Ejemplo Inválido</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>Nombre</td>
+                                <td>Juan Carlos Perez</td>
+                                <td>juan perez / JUAN123</td>
+                            </tr>
+                            <tr>
+                                <td>Correo</td>
+                                <td>177557@upslp.edu.mx</td>
+                                <td>177557@gmail.com / 200123@upslp.edu.mx</td>
+                            </tr>
+                            <tr>
+                                <td>Matrícula</td>
+                                <td>177557 (auto)</td>
+                                <td>17755 / 200123</td>
+                            </tr>
+                            <tr>
+                                <td>CURP</td>
+                                <td>GALA010203HSLRRL01</td>
+                                <td>GALA01A203HSLRRL01 / gala010203...</td>
+                            </tr>
+                            <tr>
+                                <td>Teléfono</td>
+                                <td>4441234567</td>
+                                <td>444-123-4567 / 444 123 4567</td>
+                            </tr>
+                            <tr>
+                                <td>Código Postal</td>
+                                <td>78390</td>
+                                <td>78A90 / 7839</td>
+                            </tr>
+                            <tr>
+                                <td>Contraseña</td>
+                                <td>-A12345678</td>
+                                <td>@A12345678 / -a12345678</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </details>
         </section>
     </main>
 
@@ -84,5 +176,8 @@
             </div>
         </div>
     </footer>
+
+    <!-- Conexión con la lógica de validación -->
+    <script src="validaciones.js"></script>
 </body>
 </html>
