@@ -16,16 +16,20 @@
         <section class="card">
             <h2>Captura de Datos del Estudiante</h2>
             <p class="descripcion-card">
-                Complete los campos respetando el formato oficial. La matrícula se completará automáticamente a partir de su correo institucional.
+                Complete los campos respetando el formato oficial. Al escribir su matrícula o su correo institucional, el otro campo se completará automáticamente.
             </p>
 
-            <!-- Panel automático de IP y URL (sin intervención del usuario) -->
-            <div class="panel-sistema">
-                <span class="titulo-sistema">Verificación automática de conexión:</span>
-                <div class="badges-sistema">
-                    <span id="estado-ip" class="badge-estado badge-aviso">Detectando IP pública...</span>
-                    <span id="estado-url" class="badge-estado badge-aviso">Verificando URL...</span>
+            <!-- Barra rápida para autodetectar IP y URL -->
+            <div class="panel-sistema panel-fila">
+                <div>
+                    <span class="titulo-sistema">Herramienta de demostración</span>
+                    <small id="estado-deteccion" class="texto-deteccion">
+                        Puede escribir cualquier IP y URL abajo, o detectar los datos de su conexión actual.
+                    </small>
                 </div>
+                <button type="button" id="btn-autodetectar" class="btn-mini">
+                    Autodetectar IP y URL
+                </button>
             </div>
 
             <form id="form-registro" novalidate>
@@ -39,20 +43,20 @@
                         <small class="mensaje-campo" id="msg-nombre"></small>
                     </div>
 
-                    <!-- Correo Electrónico -->
+                    <!-- Matrícula (Sincronizada con Correo) -->
+                    <div class="campo">
+                        <label for="matricula">Matrícula</label>
+                        <input type="text" id="matricula" placeholder="Ej. 177557" maxlength="6">
+                        <small class="ayuda-campo">6 dígitos iniciando con 17, 18 o 19. Genera el correo automáticamente.</small>
+                        <small class="mensaje-campo" id="msg-matricula"></small>
+                    </div>
+
+                    <!-- Correo Electrónico (Sincronizado con Matrícula) -->
                     <div class="campo">
                         <label for="correo">Correo Institucional</label>
                         <input type="text" id="correo" placeholder="Ej. 177557@upslp.edu.mx">
-                        <small class="ayuda-campo">Formato: 1[7/8/9]NNNN@upslp.edu.mx</small>
+                        <small class="ayuda-campo">Formato: 1[7/8/9]NNNN@upslp.edu.mx. Completa la matrícula al escribir.</small>
                         <small class="mensaje-campo" id="msg-correo"></small>
-                    </div>
-
-                    <!-- Matrícula (Bloqueada / Automática) -->
-                    <div class="campo">
-                        <label for="matricula">Matrícula (Automática)</label>
-                        <input type="text" id="matricula" placeholder="Se genera desde el correo" readonly>
-                        <small class="ayuda-campo">Campo bloqueado. Coincide con los 6 dígitos de tu correo.</small>
-                        <small class="mensaje-campo" id="msg-matricula"></small>
                     </div>
 
                     <!-- CURP -->
@@ -87,6 +91,22 @@
                         <small class="mensaje-campo" id="msg-password"></small>
                     </div>
 
+                    <!-- Dirección IP -->
+                    <div class="campo">
+                        <label for="ip">Dirección IP (IPv4)</label>
+                        <input type="text" id="ip" placeholder="Ej. 192.168.1.1">
+                        <small class="ayuda-campo">4 bloques numéricos del 0 al 255 separados por punto.</small>
+                        <small class="mensaje-campo" id="msg-ip"></small>
+                    </div>
+
+                    <!-- URL -->
+                    <div class="campo">
+                        <label for="url">Dirección URL</label>
+                        <input type="text" id="url" placeholder="Ej. https://www.upslp.edu.mx">
+                        <small class="ayuda-campo">Debe iniciar con http:// o https://, sin puerto, sin acentos ni ñ.</small>
+                        <small class="mensaje-campo" id="msg-url"></small>
+                    </div>
+
                 </div>
 
                 <!-- Contenedor para la lista detallada de errores o mensaje de éxito -->
@@ -118,14 +138,14 @@
                                 <td>juan perez / JUAN123</td>
                             </tr>
                             <tr>
+                                <td>Matrícula</td>
+                                <td>177557</td>
+                                <td>17755 / 200123</td>
+                            </tr>
+                            <tr>
                                 <td>Correo</td>
                                 <td>177557@upslp.edu.mx</td>
                                 <td>177557@gmail.com / 200123@upslp.edu.mx</td>
-                            </tr>
-                            <tr>
-                                <td>Matrícula</td>
-                                <td>177557 (auto)</td>
-                                <td>17755 / 200123</td>
                             </tr>
                             <tr>
                                 <td>CURP</td>
@@ -146,6 +166,16 @@
                                 <td>Contraseña</td>
                                 <td>-A12345678</td>
                                 <td>@A12345678 / -a12345678</td>
+                            </tr>
+                            <tr>
+                                <td>Dirección IP</td>
+                                <td>192.168.1.1 / 8.8.8.8</td>
+                                <td>300.100.1.1 / 192.168.1</td>
+                            </tr>
+                            <tr>
+                                <td>URL</td>
+                                <td>https://www.upslp.edu.mx</td>
+                                <td>google.com / https://sitio.mx:8080</td>
                             </tr>
                         </tbody>
                     </table>
@@ -177,7 +207,6 @@
         </div>
     </footer>
 
-    <!-- Conexión con la lógica de validación -->
     <script src="validaciones.js"></script>
 </body>
 </html>
