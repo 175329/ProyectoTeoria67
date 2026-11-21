@@ -1,10 +1,150 @@
-/* Barra con botón compacto de autodetección */
+/* =====================================================
+   PROYECTO: VALIDADOR DE INFORMACIÓN Y DOCUMENTOS
+   ESTILO: DARK MODE EDITORIAL / MINIMALISTA
+   
+   #09090B -> Fondo principal (Negro profundo)
+   #121215 -> Superficie de tarjetas (Grafito oscuro)
+   #1A1A1F -> Campos y contenedores secundarios
+   #FAFAFA -> Texto principal y botón primario
+   #A1A1AA -> Texto secundario
+   rgba(255,255,255,0.10) -> Bordes sutiles
+===================================================== */
+
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+
+:root {
+    color-scheme: dark;
+    --bg-principal: #09090B;
+    --bg-tarjeta: #121215;
+    --bg-elevado: #1A1A1F;
+    --bg-hover: #24242B;
+    --borde: rgba(255, 255, 255, 0.10);
+    --borde-hover: rgba(255, 255, 255, 0.24);
+    --texto-principal: #FAFAFA;
+    --texto-secundario: #A1A1AA;
+    --texto-tenue: #71717A;
+    --blanco: #FFFFFF;
+    --negro: #09090B;
+    --exito: #22C55E;
+    --error: #EF4444;
+    --aviso: #F59E0B;
+}
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font-family: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    background-color: var(--bg-principal);
+    background-image: radial-gradient(circle at 50% 0%, rgba(255, 255, 255, 0.045) 0%, transparent 55%);
+    color: var(--texto-principal);
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+
+/* =====================================================
+   ENCABEZADO MINIMALISTA
+===================================================== */
+
+header {
+    background-color: rgba(9, 9, 11, 0.85);
+    backdrop-filter: blur(12px);
+    padding: 32px 24px;
+    text-align: center;
+    border-bottom: 1px solid var(--borde);
+}
+
+header h1 {
+    font-size: 1.9rem;
+    font-weight: 700;
+    letter-spacing: -0.03em;
+    color: var(--texto-principal);
+}
+
+header p {
+    color: var(--texto-secundario);
+    margin-top: 8px;
+    font-size: 0.95rem;
+    font-weight: 400;
+}
+
+/* =====================================================
+   CONTENEDOR PRINCIPAL Y TARJETAS
+===================================================== */
+
+.contenedor {
+    flex: 1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 48px 20px;
+}
+
+.card {
+    background-color: var(--bg-tarjeta);
+    border-radius: 24px;
+    padding: 42px 44px;
+    width: 100%;
+    max-width: 760px;
+    border: 1px solid var(--borde);
+    box-shadow: 0 24px 60px rgba(0, 0, 0, 0.55);
+    text-align: center;
+}
+
+.card-angosta {
+    max-width: 500px;
+}
+
+h2 {
+    color: var(--texto-principal);
+    font-size: 1.55rem;
+    font-weight: 600;
+    letter-spacing: -0.025em;
+    margin-bottom: 10px;
+}
+
+.descripcion-card {
+    color: var(--texto-secundario);
+    margin-bottom: 28px;
+    line-height: 1.6;
+    font-size: 0.95rem;
+}
+
+/* =====================================================
+   PANEL DE SISTEMA Y AUTODETECCIÓN (IP / URL)
+===================================================== */
+
+.panel-sistema {
+    background-color: var(--bg-elevado);
+    border: 1px solid var(--borde);
+    border-radius: 16px;
+    padding: 16px 18px;
+    margin-bottom: 28px;
+    text-align: left;
+}
+
 .panel-fila {
     display: flex;
     justify-content: space-between;
     align-items: center;
     gap: 16px;
     flex-wrap: wrap;
+}
+
+.titulo-sistema {
+    font-size: 0.72rem;
+    font-weight: 600;
+    color: var(--texto-tenue);
+    display: block;
+    margin-bottom: 6px;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
 }
 
 .texto-deteccion {
@@ -34,4 +174,495 @@
 .btn-mini:disabled {
     opacity: 0.6;
     cursor: wait;
+}
+
+.badges-sistema {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-top: 8px;
+}
+
+.badge-estado {
+    font-size: 0.8rem;
+    padding: 6px 14px;
+    border-radius: 9999px;
+    font-weight: 500;
+}
+
+.badge-ok {
+    background-color: rgba(34, 197, 94, 0.12);
+    color: #86EFAC;
+    border: 1px solid rgba(34, 197, 94, 0.28);
+}
+
+.badge-aviso {
+    background-color: rgba(245, 158, 11, 0.12);
+    color: #FDE68A;
+    border: 1px solid rgba(245, 158, 11, 0.28);
+}
+
+.badge-error {
+    background-color: rgba(239, 68, 68, 0.12);
+    color: #FCA5A5;
+    border: 1px solid rgba(239, 68, 68, 0.28);
+}
+
+/* =====================================================
+   FORMULARIOS Y CAMPOS DE ENTRADA
+===================================================== */
+
+form {
+    display: flex;
+    flex-direction: column;
+    text-align: left;
+}
+
+.grid-formulario {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px 24px;
+    margin-bottom: 12px;
+}
+
+.campo {
+    display: flex;
+    flex-direction: column;
+}
+
+.campo-completo {
+    grid-column: 1 / -1;
+}
+
+label {
+    margin-bottom: 8px;
+    color: var(--texto-principal);
+    font-weight: 500;
+    font-size: 0.86rem;
+    letter-spacing: -0.01em;
+}
+
+input[type="text"],
+input[type="password"],
+input[type="file"] {
+    background-color: var(--bg-elevado);
+    border: 1px solid var(--borde);
+    color: var(--texto-principal);
+    padding: 13px 16px;
+    border-radius: 14px;
+    font-family: inherit;
+    font-size: 0.94rem;
+    transition: border-color 0.2s ease, background-color 0.2s ease, box-shadow 0.2s ease;
+    width: 100%;
+}
+
+input:hover:not([readonly]) {
+    border-color: var(--borde-hover);
+}
+
+input:focus {
+    outline: none;
+    background-color: #1F1F26;
+    border-color: rgba(255, 255, 255, 0.55);
+    box-shadow: 0 0 0 3px rgba(255, 255, 255, 0.08);
+}
+
+input::placeholder {
+    color: var(--texto-tenue);
+}
+
+input[readonly] {
+    background-color: rgba(255, 255, 255, 0.03);
+    color: var(--texto-secundario);
+    cursor: not-allowed;
+    border: 1px dashed rgba(255, 255, 255, 0.16);
+}
+
+input[type="file"]::file-selector-button {
+    background-color: var(--blanco);
+    color: var(--negro);
+    border: none;
+    border-radius: 9999px;
+    padding: 8px 18px;
+    margin-right: 14px;
+    font-family: inherit;
+    font-size: 0.84rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+}
+
+input[type="file"]::file-selector-button:hover {
+    background-color: #E4E4E7;
+}
+
+.ayuda-campo {
+    color: var(--texto-tenue);
+    font-size: 0.78rem;
+    margin-top: 6px;
+    line-height: 1.4;
+}
+
+.mensaje-campo {
+    min-height: 18px;
+    display: block;
+}
+
+/* =====================================================
+   BOTONES REDONDEADOS (ESTILO PÍLDORA)
+===================================================== */
+
+.botones {
+    margin-top: 32px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 12px;
+    flex-wrap: wrap;
+}
+
+.btn,
+button {
+    background-color: var(--bg-elevado);
+    color: var(--texto-principal);
+    border: 1px solid var(--borde-hover);
+    border-radius: 9999px;
+    padding: 13px 28px;
+    cursor: pointer;
+    font-family: inherit;
+    font-size: 0.9rem;
+    font-weight: 600;
+    letter-spacing: -0.01em;
+    text-decoration: none;
+    transition: background-color 0.2s ease, border-color 0.2s ease, transform 0.15s ease, color 0.2s ease;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.btn:hover,
+button:hover {
+    background-color: var(--bg-hover);
+    border-color: rgba(255, 255, 255, 0.4);
+    transform: translateY(-1px);
+}
+
+.btn:active,
+button:active {
+    transform: translateY(0);
+}
+
+/* Acción principal: blanco puro sobre negro */
+.btn-primario,
+button[type="submit"] {
+    background-color: var(--blanco);
+    color: var(--negro);
+    border: 1px solid var(--blanco);
+}
+
+.btn-primario:hover,
+button[type="submit"]:hover {
+    background-color: #E4E4E7;
+    border-color: #E4E4E7;
+    color: var(--negro);
+}
+
+/* Acción secundaria: borde limpio y fondo transparente */
+.btn-secundario {
+    background-color: transparent;
+    color: var(--texto-secundario);
+    border: 1px solid var(--borde);
+}
+
+.btn-secundario:hover {
+    background-color: rgba(255, 255, 255, 0.06);
+    border-color: var(--borde-hover);
+    color: var(--texto-principal);
+}
+
+/* =====================================================
+   ÁREA DE CARGA DE ARCHIVOS E IMÁGENES
+===================================================== */
+
+.zona-archivo {
+    border: 1.5px dashed rgba(255, 255, 255, 0.2);
+    background-color: var(--bg-elevado);
+    padding: 36px 24px;
+    margin: 22px 0;
+    border-radius: 18px;
+    transition: border-color 0.25s ease, background-color 0.25s ease;
+}
+
+.zona-archivo:hover {
+    border-color: rgba(255, 255, 255, 0.48);
+    background-color: #1F1F26;
+}
+
+.zona-archivo p {
+    color: var(--texto-secundario);
+    font-weight: 500;
+    font-size: 0.92rem;
+    margin-bottom: 16px;
+}
+
+.contenedor-imagen {
+    margin: 16px 0 26px 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    overflow: hidden;
+    border-radius: 16px;
+    border: 1px solid var(--borde);
+    background-color: var(--bg-elevado);
+}
+
+.contenedor-imagen img {
+    max-width: 100%;
+    height: auto;
+    display: block;
+}
+
+/* =====================================================
+   ESTADOS DE VALIDACIÓN (JAVASCRIPT)
+===================================================== */
+
+.correcto {
+    border-color: rgba(34, 197, 94, 0.7) !important;
+    background-color: rgba(34, 197, 94, 0.06) !important;
+}
+
+.incorrecto {
+    border-color: rgba(239, 68, 68, 0.75) !important;
+    background-color: rgba(239, 68, 68, 0.06) !important;
+}
+
+.error {
+    color: #FCA5A5;
+    font-size: 0.8rem;
+    margin-top: 5px;
+    font-weight: 500;
+}
+
+.exito {
+    color: #86EFAC;
+    font-size: 0.8rem;
+    margin-top: 5px;
+    font-weight: 500;
+}
+
+/* =====================================================
+   RESUMEN FINAL DE VALIDACIÓN
+===================================================== */
+
+.resumen-oculto {
+    display: none;
+}
+
+.resumen-errores,
+.resumen-exito {
+    margin-top: 24px;
+    padding: 18px 22px;
+    border-radius: 16px;
+    text-align: left;
+    font-size: 0.9rem;
+    line-height: 1.55;
+}
+
+.resumen-errores {
+    background-color: rgba(239, 68, 68, 0.09);
+    border: 1px solid rgba(239, 68, 68, 0.32);
+    color: #FECACA;
+}
+
+.resumen-errores h3 {
+    font-size: 0.98rem;
+    font-weight: 600;
+    margin-bottom: 10px;
+    color: #FCA5A5;
+}
+
+.resumen-errores ul {
+    margin: 8px 0 12px 20px;
+}
+
+.resumen-errores li {
+    margin-bottom: 6px;
+}
+
+.resumen-exito {
+    background-color: rgba(34, 197, 94, 0.09);
+    border: 1px solid rgba(34, 197, 94, 0.32);
+    color: #DCFCE7;
+}
+
+.resumen-exito h3 {
+    font-size: 0.98rem;
+    font-weight: 600;
+    margin-bottom: 6px;
+    color: #86EFAC;
+}
+
+/* =====================================================
+   GUÍA DESPLEGABLE DE EJEMPLOS
+===================================================== */
+
+.guia-ejemplos {
+    margin-top: 32px;
+    text-align: left;
+    border: 1px solid var(--borde);
+    border-radius: 16px;
+    padding: 14px 18px;
+    background-color: var(--bg-elevado);
+}
+
+.guia-ejemplos summary {
+    cursor: pointer;
+    font-weight: 500;
+    color: var(--texto-principal);
+    font-size: 0.88rem;
+    user-select: none;
+}
+
+.guia-ejemplos summary:hover {
+    color: var(--texto-secundario);
+}
+
+.tabla-ejemplos-contenedor {
+    overflow-x: auto;
+    margin-top: 14px;
+    border-radius: 10px;
+    border: 1px solid var(--borde);
+}
+
+.tabla-ejemplos {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.82rem;
+}
+
+.tabla-ejemplos th,
+.tabla-ejemplos td {
+    border-bottom: 1px solid var(--borde);
+    padding: 10px 12px;
+    text-align: left;
+}
+
+.tabla-ejemplos tr:last-child td {
+    border-bottom: none;
+}
+
+.tabla-ejemplos th {
+    background-color: rgba(255, 255, 255, 0.05);
+    color: var(--texto-principal);
+    font-weight: 600;
+}
+
+.tabla-ejemplos td {
+    color: var(--texto-secundario);
+}
+
+/* =====================================================
+   PIE DE PÁGINA ACADÉMICO
+===================================================== */
+
+footer {
+    background-color: #050507;
+    color: var(--texto-secundario);
+    padding: 32px 24px;
+    border-top: 1px solid var(--borde);
+    margin-top: auto;
+}
+
+.footer-contenido {
+    max-width: 960px;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 20px;
+    text-align: center;
+}
+
+.footer-materia h3 {
+    color: var(--texto-principal);
+    font-size: 0.92rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    margin-bottom: 6px;
+}
+
+.footer-materia p {
+    color: var(--texto-tenue);
+    font-size: 0.86rem;
+}
+
+.equipo-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 14px;
+    width: 100%;
+    padding-top: 18px;
+    border-top: 1px solid var(--borde);
+}
+
+.integrante {
+    background-color: var(--bg-tarjeta);
+    border: 1px solid var(--borde);
+    padding: 12px 16px;
+    border-radius: 14px;
+    transition: border-color 0.2s ease;
+}
+
+.integrante:hover {
+    border-color: var(--borde-hover);
+}
+
+.integrante .nombre {
+    font-weight: 500;
+    font-size: 0.86rem;
+    color: var(--texto-principal);
+    display: block;
+}
+
+.integrante .matricula {
+    font-size: 0.78rem;
+    color: var(--texto-tenue);
+    margin-top: 4px;
+    display: block;
+}
+
+/* =====================================================
+   RESPONSIVE (CELULARES Y TABLETAS)
+===================================================== */
+
+@media (max-width: 768px) {
+    .card {
+        padding: 28px 22px;
+        border-radius: 20px;
+    }
+
+    .grid-formulario,
+    .equipo-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .panel-fila {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .botones {
+        flex-direction: column;
+    }
+
+    .btn,
+    button,
+    .btn-mini {
+        width: 100%;
+    }
+
+    header h1 {
+        font-size: 1.5rem;
+    }
 }
