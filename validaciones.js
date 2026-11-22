@@ -151,9 +151,9 @@ document.addEventListener("DOMContentLoaded", () => {
             { regex: /^[A-Z]$/, desc: "una letra mayúscula (A-Z)" },
             { regex: /^[A-Z]$/, desc: "una letra mayúscula (A-Z)" },
             { regex: /^[A-Z]$/, desc: "una letra mayúscula (A-Z)" },
-            { regex: /^[A-Z]$/, desc: "una letra mayúscula (A-Z)" },
-            { regex: /^[0-9]$/, desc: "un número (0-9)" },
-            { regex: /^[0-9]$/, desc: "un número (0-9)" }
+            { regex: /^[A-Z]$/, desc: "una letra mayúscula (A-Z)" },    
+            { regex: /^[A-Z0-9]$/, desc: "un número (0-9) o letra mayúscula (A-Z)" }, 
+            { regex: /^[0-9]$/, desc: "un número (0-9)" }        
         ];
 
         const limite = Math.min(texto.length, 18);
