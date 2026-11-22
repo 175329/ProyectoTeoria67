@@ -3,12 +3,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Registro de Usuario | UPSLP</title>
+    <title>Validación de Datos | UPSLP</title>
     <link rel="stylesheet" href="estilos.css">
 </head>
 <body>
     <header>
-        <h1>Registro de Usuario</h1>
+        <h1>Validación de Datos</h1>
         <p>Validación en tiempo real mediante Autómatas Finitos y Expresiones Regulares</p>
     </header>
 
@@ -47,7 +47,7 @@
                     <div class="campo">
                         <label for="matricula">Matrícula</label>
                         <input type="text" id="matricula" placeholder="Ej. 177557" maxlength="6">
-                        <small class="ayuda-campo">6 dígitos iniciando con 17, 18 o 19. Genera el correo automáticamente.</small>
+                        <small class="ayuda-campo">6 dígitos iniciando con 17, 8 o 9. Genera el correo automáticamente.</small>
                         <small class="mensaje-campo" id="msg-matricula"></small>
                     </div>
 
@@ -62,7 +62,7 @@
                     <!-- CURP -->
                     <div class="campo">
                         <label for="curp">CURP</label>
-                        <input type="text" id="curp" placeholder="Ej. GALA010203HSLRRL01" maxlength="20">
+                        <input type="text" id="curp" placeholder="Ej. GALA010203HSLRRLA1" maxlength="20">
                         <small class="ayuda-campo">18 caracteres en mayúsculas: 4 letras, 6 números, H/M, 5 letras, 1 letra/número y 1 número.</small>
                         <small class="mensaje-campo" id="msg-curp"></small>
                     </div>
@@ -114,8 +114,7 @@
 
                 <div class="botones">
                     <a href="index.html" class="btn btn-secundario">Volver al Inicio</a>
-                    <a href="archivos.html" class="btn">Usar Datos de Archivo</a>
-                    <button type="submit">Confirmar Datos</button>
+                    <button type="submit">Validar Datos</button>
                 </div>
             </form>
 
@@ -149,7 +148,7 @@
                             </tr>
                             <tr>
                                 <td>CURP</td>
-                                <td>GALA010203HSLRRL01</td>
+                                <td>GALA010203HSLRRLA1</td>
                                 <td>GALA01A203HSLRRL01 / gala010203...</td>
                             </tr>
                             <tr>
